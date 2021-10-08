@@ -4,8 +4,7 @@ Can you build a simple quiz interface with Flutter?
 
 ## The Challenge
 
-Using the following wireframes, build a quiz interface. Using your comprehension about how the application functions, construct all applicable tests. The questions are all in [questions.json]
-(assets/questions.json).
+Using the following wireframes, build a quiz interface. Using your comprehension about how the application functions, construct all applicable tests. The questions are all in [questions.json](assets/questions.json).
 
 ![Question](docs/wire-question.png)
 
