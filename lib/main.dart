@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'question.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -10,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: ''),
     );
   }
 }
@@ -29,38 +33,236 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
+  bool nextQuesPrompt = false;
+  final _random = new Random();
+  int i = 0;
+  List _questionData = [];
+  List answersList = [];
+
+
+
+  Future<void> readJson() async {
+    final response = await rootBundle.loadString('assets/questions.json');
+    final data = await json.decode(response);
+    // final data1 = await json.decode(data);
+    List<dynamic>? question = data != null ? List.from(data) : null;
+    // Question question = Question.fromJson(data[0]);
+    // print(question![0]['category']);
     setState(() {
-      _counter++;
+      _questionData = question!;
     });
+  }
+
+  List combineAnswers(int i){
+    answersList = _questionData[i]["incorrect_answers"];
+    answersList.add(_questionData[i]["correct_answer"]);
+    answersList.shuffle();
+    return answersList;
+  }
+
+  void checkAns(String ans){
+
+  }
+
+  //GENERATE RANDOM NUMBER FOR RANDOM PLACEMENT OF OPTIONS
+  double percentageIndicator(int i){
+    return i/_questionData.length * 100;
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    readJson();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 50, right: 50, top: 25, bottom: 25),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 10,
+                child: LinearProgressIndicator(
+                  value: percentageIndicator(i),
+                  backgroundColor: Colors.white,
+                  color: Colors.grey,
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Question ${i+1}',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  // '',
+                  json.decode(_questionData[i]["category"].toString()).toString(),
+                  // _items[i]['category'].toString(),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.black,
+                    size: 10,
+                  ),
+                  Icon(
+                    Icons.star,
+                    color: _questionData[i]["difficulty"] == "medium" || _questionData[i]["difficulty"] == "hard" ? Colors.black : Colors.grey,
+                    size: 10,
+                  ),
+                  Icon(
+                    Icons.star,
+                    color: _questionData[i]["difficulty"] == "hard" ? Colors.black : Colors.grey,
+                    size: 10,
+                  ),
+                  Icon(
+                    Icons.star,
+                    color: Colors.grey,
+                    size: 10,
+                  ),
+                  Icon(
+                    Icons.star,
+                    color: Colors.grey,
+                    size: 10,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                // '',
+                _questionData[i]["question"].replaceAll(RegExp('%20'), ' '),
+                // 'This is where your question will come. How does it look right now?',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  OutlinedButton(
+                    child: Text(
+                      combineAnswers(i)[0],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                      primary: Colors.grey,
+                      onSurface: Colors.black,
+                    ),
+                    onPressed: (){
+
+                    },
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  OutlinedButton(
+                    child: SizedBox(
+                      height: 20,
+                      width: 30,
+                      child: Text(
+                        combineAnswers(i)[1],
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                      primary: Colors.grey,
+                      onSurface: Colors.black,
+                    ),
+                    onPressed: (){
+
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  OutlinedButton(
+                    child: Text(
+                      combineAnswers(i)[2],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                      primary: Colors.grey,
+                      onSurface: Colors.black,
+                    ),
+                    onPressed: (){
+
+                    },
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  OutlinedButton(
+                    child: Text(
+                      combineAnswers(i)[3],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white70,
+                      primary: Colors.grey,
+                      onSurface: Colors.black,
+                    ),
+                    onPressed: (){
+
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Correct',
+                style: TextStyle(
+                  fontSize: 40,
+                ),
+              ),
+              ElevatedButton(
+                child: Text(
+                  'Next Question',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                onPressed: (){
+                  if(i < _questionData.length){
+                    setState((){
+                      i++;
+                    });
+                  }
+                },
+              ),
+            ],
+          )
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
