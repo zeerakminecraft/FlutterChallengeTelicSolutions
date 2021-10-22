@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int i = 0;
   List _questionData = [];
   List answersList = [];
+  bool? toggleAnswer;
 
 
 
@@ -62,7 +63,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void checkAns(String ans){
-
+    if (ans == _questionData[i]["correct_answer"]){
+      setState((){
+        toggleAnswer = true;
+      });
+    }
+    else{
+      setState((){
+        toggleAnswer = false;
+      });
+    }
   }
 
   //GENERATE RANDOM NUMBER FOR RANDOM PLACEMENT OF OPTIONS
@@ -111,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: Alignment.topLeft,
                 child: Text(
                   // '',
-                  json.decode(_questionData[i]["category"].toString()).toString(),
+                  _questionData[i]["category"],
                   // _items[i]['category'].toString(),
                 ),
               ),
@@ -151,7 +161,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
               ),
               Text(
-                // '',
                 _questionData[i]["question"].replaceAll(RegExp('%20'), ' '),
                 // 'This is where your question will come. How does it look right now?',
                 style: TextStyle(
@@ -166,8 +175,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   OutlinedButton(
-                    child: Text(
-                      combineAnswers(i)[0],
+                    child: SizedBox(
+                      height: 30,
+                      width: 50,
+                      child: Text(
+                        combineAnswers(i)[0],
+                      ),
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white70,
@@ -175,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
-
+                      checkAns(combineAnswers(i)[0]);
                     },
                   ),
                   SizedBox(
@@ -183,8 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   OutlinedButton(
                     child: SizedBox(
-                      height: 20,
-                      width: 30,
+                      height: 30,
+                      width: 50,
                       child: Text(
                         combineAnswers(i)[1],
                       ),
@@ -195,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
-
+                      checkAns(combineAnswers(i)[1]);
                     },
                   ),
                 ],
@@ -206,8 +219,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   OutlinedButton(
-                    child: Text(
-                      combineAnswers(i)[2],
+                    child: SizedBox(
+                      height: 30,
+                      width: 50,
+                      child: Text(
+                        combineAnswers(i)[2],
+                      ),
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white70,
@@ -215,15 +232,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
-
+                      checkAns(combineAnswers(i)[2]);
                     },
                   ),
                   SizedBox(
                     width: 20,
                   ),
                   OutlinedButton(
-                    child: Text(
-                      combineAnswers(i)[3],
+                    child: SizedBox(
+                      height: 30,
+                      width: 50,
+                      child: Text(
+                        combineAnswers(i)[3],
+                      ),
                     ),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white70,
@@ -231,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
-
+                      checkAns(combineAnswers(i)[3]);
                     },
                   ),
                 ],
@@ -240,7 +261,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
               ),
               Text(
-                'Correct',
+                '',
+                // toggleAnswer == null ? '' : toggleAnswer == true ? 'Correct' : 'Sorry',
                 style: TextStyle(
                   fontSize: 40,
                 ),
@@ -255,6 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: (){
                   if(i < _questionData.length){
                     setState((){
+                      // toggleAnswer = null;
                       i++;
                     });
                   }
