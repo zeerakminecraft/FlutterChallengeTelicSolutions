@@ -39,7 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int i = 0;
   List _questionData = [];
   List answersList = [];
-  bool? toggleAnswer;
+  bool toggleAnswer = false;
+  bool pressed = false;
+  int correctans = 0;
+  int wrongans = 0;
 
 
 
@@ -65,11 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void checkAns(String ans){
     if (ans == _questionData[i]["correct_answer"]){
       setState((){
+        correctans++;
         toggleAnswer = true;
       });
     }
     else{
       setState((){
+        wrongans++;
         toggleAnswer = false;
       });
     }
@@ -77,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //GENERATE RANDOM NUMBER FOR RANDOM PLACEMENT OF OPTIONS
   double percentageIndicator(int i){
-    return i/_questionData.length * 100;
+    return i/_questionData.length;
   }
 
 
@@ -90,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -97,12 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               SizedBox(
-                height: 10,
+                height: 5,
                 child: LinearProgressIndicator(
                   value: percentageIndicator(i),
                   backgroundColor: Colors.white,
                   color: Colors.grey,
                 ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -161,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
               ),
               Text(
-                _questionData[i]["question"].replaceAll(RegExp('%20'), ' '),
+                _questionData[i]["question"],
                 // 'This is where your question will come. How does it look right now?',
                 style: TextStyle(
                   fontSize: 25,
@@ -188,6 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
+                      pressed = true;
                       checkAns(combineAnswers(i)[0]);
                     },
                   ),
@@ -208,6 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
+                      pressed = true;
                       checkAns(combineAnswers(i)[1]);
                     },
                   ),
@@ -232,6 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
+                      pressed = true;
                       checkAns(combineAnswers(i)[2]);
                     },
                   ),
@@ -252,6 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSurface: Colors.black,
                     ),
                     onPressed: (){
+                      pressed = true;
                       checkAns(combineAnswers(i)[3]);
                     },
                   ),
@@ -260,31 +273,59 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                '',
-                // toggleAnswer == null ? '' : toggleAnswer == true ? 'Correct' : 'Sorry',
+              pressed? Column(children: [Text(
+                toggleAnswer == true ? 'Correct' : 'Sorry',
                 style: TextStyle(
                   fontSize: 40,
                 ),
               ),
-              ElevatedButton(
-                child: Text(
-                  'Next Question',
-                  style: TextStyle(
-                    color: Colors.black,
+                ElevatedButton(
+                  child: Text(
+                    'Next Question',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: (){
+                    if(i < _questionData.length){
+                      setState((){
+                        // toggleAnswer = null;
+                        pressed = false;
+                        i++;
+                      });
+                    }
+                  },
+                ),],) : SizedBox(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: correctans > 0 ? Colors.black : Colors.white,
+                        ),
+                        flex: correctans > 0 ? (correctans/_questionData.length).round() : 1,
+                      ),
+                      Expanded(
+                        child: Container(
+                          color: wrongans > 0 && i > 0 ? Colors.grey : Colors.white,
+                        ),
+                        flex: wrongans > 0 && i > 0 ? (wrongans/i).round() : 1,
+                      ),
+                      Expanded(
+                        child: Container(
+                          color: i>0 && correctans>0 ? Colors.white70 : Colors.white,
+                        ),
+                        flex: i>0 && correctans>0 ? ( ((correctans+(_questionData.length - i))/_questionData.length).round() ) : 1,
+                      )
+                    ],
                   ),
                 ),
-                onPressed: (){
-                  if(i < _questionData.length){
-                    setState((){
-                      // toggleAnswer = null;
-                      i++;
-                    });
-                  }
-                },
-              ),
+              )
             ],
-          )
+          ),
         ),
       ),
     );
