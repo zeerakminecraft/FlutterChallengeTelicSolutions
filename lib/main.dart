@@ -59,9 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List combineAnswers(int i){
-    answersList = _questionData[i]["incorrect_answers"];
+    answersList = List.from(_questionData[i]["incorrect_answers"]);
     answersList.add(_questionData[i]["correct_answer"]);
-    answersList.shuffle();
+    // answersList.shuffle();
     return answersList;
   }
 
@@ -80,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  //GENERATE RANDOM NUMBER FOR RANDOM PLACEMENT OF OPTIONS
   double percentageIndicator(int i){
     return i/_questionData.length;
   }
@@ -227,14 +226,14 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 20,
               ),
-              Row(
+              combineAnswers(i).length > 2 ? Row(
                 children: [
                   OutlinedButton(
                     child: SizedBox(
                       height: 30,
                       width: 50,
                       child: Text(
-                        combineAnswers(i)[2],
+                        combineAnswers(i)[2] ?? '',
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -244,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     onPressed: (){
                       pressed = true;
-                      checkAns(combineAnswers(i)[2]);
+                      checkAns(combineAnswers(i)[2] ?? '');
                     },
                   ),
                   SizedBox(
@@ -255,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 30,
                       width: 50,
                       child: Text(
-                        combineAnswers(i)[3],
+                        combineAnswers(i)[3] ?? '',
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -265,11 +264,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     onPressed: (){
                       pressed = true;
-                      checkAns(combineAnswers(i)[3]);
+                      checkAns(combineAnswers(i)[3] ?? '');
                     },
                   ),
                 ],
-              ),
+              ) : SizedBox(),
               SizedBox(
                 height: 20,
               ),
