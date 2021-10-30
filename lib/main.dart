@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   double percentageIndicator(int i) {
-    return i / _questionData.length;
+    return (i) / _questionData.length;
   }
 
   @override
@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 5,
                   child: LinearProgressIndicator(
-                    value: percentageIndicator(i+1),
+                    value: percentageIndicator(i),
                     backgroundColor: Colors.white,
                     color: Colors.grey,
                   ),
@@ -311,52 +311,38 @@ class _MyHomePageState extends State<MyHomePage> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'Score: ${((correctans/i+1)*100).round()}%',
+                                i > 0? 'Score: ${((correctans/i+1)*100).toInt()}%' : 'Score: ',
                               ),
                             ),
 
                             Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                'Max Score: ${(((correctans + (_questionData.length - i+1))/i+1)*100).round()}%',
+                                i > 0 ? 'Max Score: ${(((_questionData.length - wrongans)/(i+1))*100).toInt()}%' : 'Max Score: ',
                               ),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            Expanded(
-                              child: Container(
-                                height: 8,
-                                color: correctans > 0 ? Colors.black : Colors.white,
-                              ),
-                              flex: correctans > 0
-                                  ? (correctans / _questionData.length).round()
-                                  : 1,
+                            Container(
+                              width: correctans > 0 ? (i+1) : 0,
+                              height: 8,
+                              color: correctans > 0 ? Colors.black : Colors.white,
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 8,
-                                color: wrongans > 0 && i+1 > 0
-                                    ? Colors.grey
-                                    : Colors.white,
-                              ),
-                              flex: wrongans > 0 && i+1 > 0
-                                  ? (wrongans / i+1).round()
-                                  : 1,
+                            Container(
+                              width: wrongans.toDouble(),
+                              height: 8,
+                              color: wrongans > 0 && i+1 > 0
+                                  ? Colors.grey
+                                  : Colors.white,
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 8,
-                                color: i > 0 && correctans > 0
-                                    ? Colors.white70
-                                    : Colors.white,
-                              ),
-                              flex: i > 0 && correctans > 0
-                                  ? (((correctans + (_questionData.length - i+1)) /
-                                          _questionData.length)
-                                      .round())
-                                  : 1,
+                            Container(
+                              width: _questionData.length - (i+1),
+                              height: 8,
+                              color: i > 0 && correctans > 0
+                                  ? Colors.white70
+                                  : Colors.white,
                             )
                           ],
                         ),
