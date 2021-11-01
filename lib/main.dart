@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int i = 0;
   List _questionData = [];
   List answersList = [];
-  bool toggleAnswer = false;
+  bool answerSelection = false;
   bool pressed = false;
   int correctans = 0;
   int wrongans = 0;
@@ -61,13 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void checkAns(String ans) {
     if (ans == _questionData[i]["correct_answer"]) {
       setState(() {
-        correctans++;
-        toggleAnswer = true;
+        answerSelection = true;
       });
     } else {
       setState(() {
-        wrongans++;
-        toggleAnswer = false;
+        answerSelection = false;
       });
     }
   }
@@ -275,7 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? Column(
                         children: [
                           Text(
-                            toggleAnswer == true ? 'Correct' : 'Sorry',
+                            answerSelection == true ? 'Correct' : 'Sorry',
                             style: TextStyle(
                               fontSize: 40,
                             ),
@@ -288,11 +286,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             onPressed: () {
-                              if (i < _questionData.length-1) {
+                              if (i < _questionData.length - 1) {
                                 setState(() {
-                                  // toggleAnswer = null;
-                                  pressed = false;
+                                  if (answerSelection == true) {
+                                    correctans++;
+                                  } else {
+                                    wrongans++;
+                                  }
                                   i++;
+                                  pressed = false;
                                 });
                               }
                             },
@@ -303,49 +305,98 @@ class _MyHomePageState extends State<MyHomePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Row(
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                i > 0? 'Score: ${((correctans/i+1)*100).toInt()}%' : 'Score: ',
+                                i > 0
+                                    ? 'Score: ${((correctans / (i + 1)) * 100).toInt()}%'
+                                    : 'Score: ',
                               ),
                             ),
-
                             Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                i > 0 ? 'Max Score: ${(((_questionData.length - wrongans)/(i+1))*100).toInt()}%' : 'Max Score: ',
+                                i > 0
+                                    ? 'Max Score: ${(((_questionData.length - wrongans) / (_questionData.length)) * 100).toInt()}%'
+                                    : 'Max Score: ',
                               ),
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              width: correctans > 0 ? (i+1) : 0,
-                              height: 8,
-                              color: correctans > 0 ? Colors.black : Colors.white,
-                            ),
-                            Container(
-                              width: wrongans.toDouble(),
-                              height: 8,
-                              color: wrongans > 0 && i+1 > 0
-                                  ? Colors.grey
-                                  : Colors.white,
-                            ),
-                            Container(
-                              width: _questionData.length - (i+1),
-                              height: 8,
-                              color: i > 0 && correctans > 0
-                                  ? Colors.white70
-                                  : Colors.white,
-                            )
-                          ],
-                        ),
+                        if (correctans > 0 || wrongans > 0)
+                          Row(
+                            children: [
+                              Expanded(
+                                // flex: (correctans/(correctans + wrongans)) != 0 ? (correctans/(correctans + wrongans)).toInt() : 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: correctans > 0
+                                        ? Colors.black
+                                        : Colors.white,
+                                    border: Border(
+                                      left: BorderSide(
+                                          width: 1, color: Colors.black),
+                                      top: BorderSide(
+                                          width: 1, color: Colors.black),
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.black),
+                                    ),
+                                  ),
+                                  width: correctans > 0 ? (i + 1) : 0,
+                                  height: 8,
+                                  // color: correctans > 0 ? Colors.black : Colors.white,
+                                ),
+                              ),
+                              Expanded(
+                                // flex: (wrongans/(correctans + wrongans)) > 0 ? (wrongans/(correctans + wrongans)).toInt() : 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: wrongans > 0 && i + 1 > 0
+                                          ? Colors.grey
+                                          : Colors.white,
+                                      border: Border(
+                                        top: BorderSide(
+                                            width: 1, color: Colors.black),
+                                        bottom: BorderSide(
+                                            width: 1, color: Colors.black),
+                                      )),
+                                  width: wrongans.toDouble(),
+                                  height: 8,
+                                  // color: wrongans > 0 && i+1 > 0
+                                  //     ? Colors.grey
+                                  //     : Colors.white,
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      right: BorderSide(
+                                          width: 1, color: Colors.black),
+                                      top: BorderSide(
+                                          width: 1, color: Colors.black),
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.black),
+                                    ),
+                                    color: i > 0 && correctans > 0
+                                        ? Colors.white70
+                                        : Colors.white,
+                                  ),
+                                  width: _questionData.length - (i + 1),
+                                  height: 8,
+                                  // color: i > 0 && correctans > 0
+                                  //     ? Colors.white70
+                                  //     : Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                       ],
                     ),
                   ),
