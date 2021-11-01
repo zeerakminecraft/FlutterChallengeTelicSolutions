@@ -333,7 +333,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             children: [
                               Expanded(
-                                // flex: (correctans/(correctans + wrongans)) != 0 ? (correctans/(correctans + wrongans)).toInt() : 1,
+                                flex: (correctans/(correctans + wrongans)) > 0 ? ((correctans~/(correctans + wrongans))*10) : 1,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: correctans > 0
@@ -354,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               Expanded(
-                                // flex: (wrongans/(correctans + wrongans)) > 0 ? (wrongans/(correctans + wrongans)).toInt() : 1,
+                                flex: (wrongans/(correctans + wrongans)) > 0 ? ((wrongans~/(correctans + wrongans))*10) : 1,
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color: wrongans > 0 && i + 1 > 0
@@ -365,6 +365,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                             width: 1, color: Colors.black),
                                         bottom: BorderSide(
                                             width: 1, color: Colors.black),
+                                        right: BorderSide(
+                                            width: 1, color: Colors.black),
                                       )),
                                   width: wrongans.toDouble(),
                                   height: 8,
@@ -373,28 +375,28 @@ class _MyHomePageState extends State<MyHomePage> {
                                   //     : Colors.white,
                                 ),
                               ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      right: BorderSide(
-                                          width: 1, color: Colors.black),
-                                      top: BorderSide(
-                                          width: 1, color: Colors.black),
-                                      bottom: BorderSide(
-                                          width: 1, color: Colors.black),
-                                    ),
-                                    color: i > 0 && correctans > 0
-                                        ? Colors.white70
-                                        : Colors.white,
-                                  ),
-                                  width: _questionData.length - (i + 1),
-                                  height: 8,
-                                  // color: i > 0 && correctans > 0
-                                  //     ? Colors.white70
-                                  //     : Colors.white,
-                                ),
-                              )
+                              // Expanded(
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       border: Border(
+                              //         right: BorderSide(
+                              //             width: 1, color: Colors.black),
+                              //         top: BorderSide(
+                              //             width: 1, color: Colors.black),
+                              //         bottom: BorderSide(
+                              //             width: 1, color: Colors.black),
+                              //       ),
+                              //       color: i > 0 && correctans > 0
+                              //           ? Colors.white70
+                              //           : Colors.white,
+                              //     ),
+                              //     width: _questionData.length - (i + 1),
+                              //     height: 8,
+                              //     // color: i > 0 && correctans > 0
+                              //     //     ? Colors.white70
+                              //     //     : Colors.white,
+                              //   ),
+                              // )
                             ],
                           ),
                       ],
