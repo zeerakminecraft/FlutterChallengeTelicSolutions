@@ -51,10 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  List combineAnswers(int i) {
+  List<dynamic> combineAnswers(int i) {
     answersList = List.from(_questionData[i]["incorrect_answers"]);
     answersList.add(_questionData[i]["correct_answer"]);
-    // answersList.shuffle();
+    answersList.shuffle();
     return answersList;
   }
 
@@ -190,7 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         primary: Colors.grey,
                         onSurface: Colors.black,
                       ),
-                      onPressed: () {
+                      onPressed: pressed? (){
+
+                      } : () {
                         pressed = true;
                         checkAns(combineAnswers(i)[0]);
                       },
@@ -211,7 +213,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         primary: Colors.grey,
                         onSurface: Colors.black,
                       ),
-                      onPressed: () {
+                      onPressed: pressed? (){
+
+                      } : () {
                         pressed = true;
                         checkAns(combineAnswers(i)[1]);
                       },
@@ -237,7 +241,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               primary: Colors.grey,
                               onSurface: Colors.black,
                             ),
-                            onPressed: () {
+                            onPressed: pressed? (){
+
+                            } : () {
                               pressed = true;
                               checkAns(combineAnswers(i)[2] ?? '');
                             },
@@ -258,7 +264,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               primary: Colors.grey,
                               onSurface: Colors.black,
                             ),
-                            onPressed: () {
+                            onPressed: pressed? (){
+
+                            } : () {
                               pressed = true;
                               checkAns(combineAnswers(i)[3] ?? '');
                             },
@@ -286,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             onPressed: () {
-                              if (i < _questionData.length - 1) {
+                              if (i < _questionData.length) {
                                 setState(() {
                                   if (answerSelection == true) {
                                     correctans++;
@@ -332,48 +340,43 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (correctans > 0 || wrongans > 0)
                           Row(
                             children: [
-                              Expanded(
-                                flex: (correctans/(correctans + wrongans)) > 0 ? ((correctans~/(correctans + wrongans))*10) : 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: correctans > 0
-                                        ? Colors.black
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: correctans > 0
+                                      ? Colors.black
+                                      : Colors.white,
+                                  border: Border(
+                                    left: BorderSide(
+                                        width: 1, color: Colors.black),
+                                    top: BorderSide(
+                                        width: 1, color: Colors.black),
+                                    bottom: BorderSide(
+                                        width: 1, color: Colors.black),
+                                  ),
+                                ),
+                                width: ((correctans / (i + 1))*100),
+                                height: 8,
+                                // color: correctans > 0 ? Colors.black : Colors.white,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: wrongans > 0 && i + 1 > 0
+                                        ? Colors.grey
                                         : Colors.white,
                                     border: Border(
-                                      left: BorderSide(
-                                          width: 1, color: Colors.black),
                                       top: BorderSide(
                                           width: 1, color: Colors.black),
                                       bottom: BorderSide(
                                           width: 1, color: Colors.black),
-                                    ),
-                                  ),
-                                  width: correctans > 0 ? (i + 1) : 0,
-                                  height: 8,
-                                  // color: correctans > 0 ? Colors.black : Colors.white,
-                                ),
-                              ),
-                              Expanded(
-                                flex: (wrongans/(correctans + wrongans)) > 0 ? ((wrongans~/(correctans + wrongans))*10) : 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: wrongans > 0 && i + 1 > 0
-                                          ? Colors.grey
-                                          : Colors.white,
-                                      border: Border(
-                                        top: BorderSide(
-                                            width: 1, color: Colors.black),
-                                        bottom: BorderSide(
-                                            width: 1, color: Colors.black),
-                                        right: BorderSide(
-                                            width: 1, color: Colors.black),
-                                      )),
-                                  width: wrongans.toDouble(),
-                                  height: 8,
-                                  // color: wrongans > 0 && i+1 > 0
-                                  //     ? Colors.grey
-                                  //     : Colors.white,
-                                ),
+                                      right: BorderSide(
+                                          width: 1, color: Colors.black),
+                                    )),
+                                // width: wrongans.toDouble(),
+                                height: 8,
+                                width: (((wrongans) / (i+1)) * 100)
+                                // color: wrongans > 0 && i+1 > 0
+                                //     ? Colors.grey
+                                //     : Colors.white,
                               ),
                               // Expanded(
                               //   child: Container(
